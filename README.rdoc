@@ -1,0 +1,182 @@
+= capistrano-abril
+
+Defaults and recipes used in our deployments.
+
+Based on 'capistrano-helpers' gem.
+    https://github.com/westarete/capistrano-helpers
+
+All deploys are expected to have multistage scenarios using 'capistrano-ext' gem.
+    https://github.com/jamis/capistrano-ext.git
+
+== Usage
+
+In your capistrano deploy recipe, simply require the helpers that contain the
+functionality that you would like to add to your recipe. In most cases this
+also takes care of adding the hook so that the action takes place at the right
+time during deployment.
+
+Here's an example config/deploy.rb that uses a few helpers:
+
+  require 'capistrano-abril/branch'     # Deploy by BRANCH/TAG/commit
+  require 'capistrano-abril/bundler'    # Runs "bundle install" correctly
+  require 'capistrano-abril/config'     # Symlink to config file
+  require 'capistrano-abril/multistage' # Support to multistage scenarios
+  require 'capistrano-abril/passenger'  # Support for Apache passenger
+  require 'capistrano-abril/setup'      # deploy:setup as supposed to be.
+  require 'capistrano-abril/version'    # Record the version number after deploying
+
+  # Parameters
+  set :application , "myapp"
+  set :scm         , "git"
+  set :repository  , "git@github.com:mycompany/myapp.git"
+
+
+That's it! The recipe will now also perform the actions described by the
+helpers (in this case, the campfire helper also requires the tinder gem and
+a config/campfire.yml file).
+
+== Helpers
+
+=== branch
+
+Sets branch/tag/commit to deploy from the command line:
+
+    $ BRANCH=my-branch-name cap dev deploy   # deploy by branch
+    $ TAG=my-tag-name       cap dev deploy   # deploy by tag
+    $ TAG=<sha1 commit>     cap dev deploy   # deploy by commit
+
+If not, prompts the user for the particular tag/branch/commit to deploy:
+
+    $ cap dev deploy       # will prompt user
+
+
+=== bundler
+
+Automatically runs "bundle install --deployment" to install gems from your Gemfile at the appropriate time.
+
+=== config
+
+...
+
+=== gems
+
+Run the gems:install rake task using sudo after deployment.
+
+=== multistage
+
+Define different scenarios (stages) to deploy to. Each stage is a file placed in
+config/deploy/ listing the group of servers/roles to deploy to.
+
+Example:
+
+File config/deploy/dev.rb
+
+        server "192.168.1.101", :db, :app, :web
+
+File config/deploy/prod.rb
+
+        server "app-ws01.example.com", :web, :app
+        server "app-ws02.example.com", :web, :app
+        server "app-db01.example.com", :db , :primary => true
+        server "app-db02.example.com", :db
+
+
+Using:
+
+    # Deploy to development:
+    $ BRANCH=master   cap dev deploy
+
+    # Deploy to production:
+    $ TAG=release-1.0 cap prod deploy
+
+
+=== migrations
+
+Always run migrations during deployment. Optional.
+
+=== passenger
+
+Overrides the default :restart task so that it's compatible with restarting
+apache/passenger (aka mod_rails). Touches tmp/restart.txt.
+
+=== php
+
+Use this helper when using capistrano to deploy a purely PHP application.
+
+This neuters the default :restart and :finalize_updates tasks, since they
+aren't typically needed for a PHP installation.
+
+=== shared
+
+During deployment, this helper replaces each of the given paths with a
+symbolic link that points to the same path under the "shared" directory on the
+server. This is useful for setting up files and directories that contain
+data that should persist across deployments (uploads, for example).
+
+After requiring this helper, set the paths to be symlinked using the
+:shared variable:
+
+  set :shared, %w{
+    public/uploads
+    public/downloads/huge_files
+  }
+
+This will create two symbolic links on the production server:
+
+  #{release_path}/public/uploads              -> #{shared_path}/public/uploads
+  #{release_path}/public/downloads/huge_files -> #{shared_path}/public/downloads/huge_files
+
+=== privates
+
+This works much like the shared helper above, except the symbolic link will
+point to the same path under "shared/private" on the server. This allows you
+to set special permissions on that directory for keeping particularly
+sensitive files safe, such as those that contain passwords or encryption keys.
+
+After requiring this helper, set the paths to be symlinked using the
+:privates variable:
+
+  set :privates, %w{
+    config/database.yml
+    config/session_secret.txt
+  }
+
+This will create two symbolic links on the production server:
+
+  #{release_path}/config/database.yml       -> #{shared_path}/private/config/database.yml
+  #{release_path}/config/session_secret.txt -> #{shared_path}/private/config/session_secret.txt
+
+=== site-reference
+
+Alexandria: deploy this app as a site-reference clone.
+
+An applications must be either of type site-reference or site-structure, not both.
+
+Must be defined:
+    set :structure_path = /abd/app/mysite/structure
+
+=== site-structure
+
+Alexandria: deploy this app as a site-structure app.
+
+An applications must be either of type site-reference or site-structure, not both.
+
+Must be defined:
+    set :structure_path = /abd/app/mysite/structure
+
+=== specs
+
+Before the app is deployed, this helper checks out the branch/tag that is
+being deployed and runs all the rspec specs, ensuring that they all pass.
+
+=== version
+
+Creates a VERSION file in the deployed copy that contains the name of the
+branch/tag that was deployed. Useful for displaying version information in the
+app itself.
+
+== Copyright
+
+Copyright (c) 2011 ????
+
+
