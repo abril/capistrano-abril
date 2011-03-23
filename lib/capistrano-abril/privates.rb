@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/../capistrano-helpers' if ! defined?(CapistranoHelpers)
+require File.dirname(__FILE__) + '/../capistrano-abril' if ! defined?(CapistranoHelpers)
 
 CapistranoHelpers.with_configuration do
  

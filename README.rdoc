@@ -5,8 +5,9 @@ Defaults and recipes used in our deployments.
 Based on 'capistrano-helpers' gem.
     https://github.com/westarete/capistrano-helpers
 
-All deploys are expected to have multistage scenarios using 'capistrano-ext' gem.
-    https://github.com/jamis/capistrano-ext.git
+All deploys are expected to have multistage scenarios.
+Some reference:
+    https://github.com/leehambley/capistrano-handbook/blob/master/index.markdown
 
 == Usage
 
@@ -52,7 +53,10 @@ If not, prompts the user for the particular tag/branch/commit to deploy:
 
 === bundler
 
-Automatically runs "bundle install --deployment" to install gems from your Gemfile at the appropriate time.
+Automatically install gems from your Gemfile at the appropriate time.
+
+Executes after update_code:
+    bundle install --deployment
 
 === config
 
@@ -69,11 +73,11 @@ config/deploy/ listing the group of servers/roles to deploy to.
 
 Example:
 
-File config/deploy/dev.rb
+  * File config/deploy/dev.rb
 
         server "192.168.1.101", :db, :app, :web
 
-File config/deploy/prod.rb
+  * File config/deploy/prod.rb
 
         server "app-ws01.example.com", :web, :app
         server "app-ws02.example.com", :web, :app
@@ -103,8 +107,8 @@ apache/passenger (aka mod_rails). Touches tmp/restart.txt.
 
 Use this helper when using capistrano to deploy a purely PHP application.
 
-This neuters the default :restart and :finalize_updates tasks, since they
-aren't typically needed for a PHP installation.
+All rails specific tasks are not executed.
+
 
 === shared
 

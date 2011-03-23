@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Marcus Vinicius Ferreira"]
-  s.date = %q{2011-03-22}
+  s.date = %q{2011-03-23}
   s.description = %q{Defaults and recipes used in our deployments. Based on 'capistrano-helpers' gem.}
   s.email = %q{ferreira.mv@gmail.com}
   s.extra_rdoc_files = [
@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
     "README.rdoc",
     "Rakefile",
     "VERSION",
+    "capistrano-abril.gemspec",
     "lib/capistrano-abril.rb",
     "lib/capistrano-abril/branch.rb",
     "lib/capistrano-abril/bundler.rb",

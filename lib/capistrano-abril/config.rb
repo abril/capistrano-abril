@@ -1,10 +1,11 @@
 require File.dirname(__FILE__) + '/../capistrano-abril' if ! defined?(CapistranoHelpers)
 
 CapistranoHelpers.with_configuration do
- 
+
   namespace :deploy do
+
     desc 'Replace named files with a symlink to their counterparts in shared/'
-    task :symlink_shared do
+    task :symlink_shared2 do
       if !exists?(:shared)
         abort 'You must specify which files to symlink using the "set :shared" command.'
       end
