@@ -1,6 +1,6 @@
-require File.dirname(__FILE__) + '/../capistrano-abril' if ! defined?(CapistranoHelpers)
+require File.dirname(__FILE__) + '/../capistrano-abril' if ! defined?(CapistranoAbril)
 
-CapistranoHelpers.with_configuration do
+CapistranoAbril.with_configuration do
 
   def _mytime
     Time.now.utc.strftime("%Y-%m-%d-%H%M")

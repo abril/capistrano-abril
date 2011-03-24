@@ -1,8 +1,8 @@
-require File.dirname(__FILE__) + '/../capistrano-abril' if ! defined?(CapistranoHelpers)
+require File.dirname(__FILE__) + '/../capistrano-abril' if ! defined?(CapistranoAbril)
 
 require 'fileutils'
 
-CapistranoHelpers.with_configuration do
+CapistranoAbril.with_configuration do
 
 ### Shameless copying from Jamis capistrano/ext,
 ### and correcting :stage -> :mstage so I can use

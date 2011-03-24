@@ -1,7 +1,7 @@
-require File.dirname(__FILE__) + '/../capistrano-abril' if ! defined?(CapistranoHelpers)
+require File.dirname(__FILE__) + '/../capistrano-abril' if ! defined?(CapistranoAbril)
 require File.dirname(__FILE__) + '/branch'
 
-CapistranoHelpers.with_configuration do
+CapistranoAbril.with_configuration do
  
   namespace :deploy do
     desc "Make sure all specs pass"

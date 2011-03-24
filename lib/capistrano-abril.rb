@@ -4,7 +4,7 @@ unless Capistrano::Configuration.respond_to?(:instance)
   abort "capistrano-abril requires Capistrano 2"
 end
 
-class CapistranoHelpers
+class CapistranoAbril
   
   # Execute the given block of code within the context of the capistrano
   # configuration.
