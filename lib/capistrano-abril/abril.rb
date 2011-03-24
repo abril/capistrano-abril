@@ -29,7 +29,6 @@ CapistranoAbril.with_configuration do
 
   set :default_shell , "/bin/bash"
 
-end
 
 # set :base_path     , fetch(:base_path    , "/abd"                     )
 # set :app_path      , fetch(:app_path     ,"#{base_path}/app"          )
@@ -42,3 +41,29 @@ end
 # set :config_path   , fetch(:config_path  ,"#{deploy_to}/config"       )
 # set :bundle_path   , fetch(:bundle_path  ,"#{deploy_to}/bundle"       )
 
+
+  namespace :deploy do
+
+    desc "Cleaning up unused dirs."
+    task :cleanup_shared do
+        run "/bin/rm -rf #{shared_path}/{log,pids,system}"
+      end
+
+    after  "deploy:finalize_update" , "deploy:cleanup_shared"
+
+    desc "OVR"
+    task :start do
+    end
+
+    desc "OVR"
+    task :stop do
+    end
+
+    desc "OVR"
+    task :restart do
+    end
+
+  end
+
+
+end

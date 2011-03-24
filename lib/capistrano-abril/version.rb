@@ -5,19 +5,18 @@ CapistranoAbril.with_configuration do
 
   namespace :deploy do
 
-    if    ENV['TAG']
-      _msg = "TAG=#{branch}"
-    elsif ENV['BRANCH']
-      _msg = "BRANCH=#{branch}"
-    else
-      _msg = "{branch}"
-    end
-
-    puts "  * Version = [#{_msg}]"
-
     desc "Write the name of the tag that we're deploying to a VERSION file"
     task :write_version_file do
-      run "echo  '#{_msg}' > #{release_path}/VERSION"
+
+      if    ENV['TAG']    then _msg = "TAG=#{branch}"
+      elsif ENV['BRANCH'] then _msg = "BRANCH=#{branch}"
+      else                     _msg = "#{branch}"
+      end
+
+      puts "  * Version [#{_msg}]"
+
+      run "echo  '#{_msg}' >  #{release_path}/VERSION"
+      run "echo  '#{_msg}' >> #{release_path}/REVISION"
     end
 
   end
