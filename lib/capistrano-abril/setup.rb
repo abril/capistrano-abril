@@ -1,8 +1,10 @@
 require File.dirname(__FILE__) + '/../capistrano-abril' if ! defined?(CapistranoHelpers)
 
 CapistranoHelpers.with_configuration do
- 
+
   namespace :deploy do
+
+# default_run_options[:pty] = true
 
     desc <<-DESC
       setup: create initial directories for all hosts.
@@ -12,26 +14,28 @@ CapistranoHelpers.with_configuration do
     task :setup, :roles => :app, :except => { :no_release => true } do
 
         dirs =  [ "#{base_path}"          \
+                , "#{logs_path}"          \
                 , "#{deploy_to}"          \
                 , "#{releases_path}"      \
                 , "#{releases_path}/1"    \
                 , "#{shared_path}"        \
                 , "#{shared_path}/config" \
-                , "#{logs_path}"          \
                 , "#{config_path}"        \
                 ]
 
-        dirs.each |d| do
-#         run "#{sudo} umask #{umask} && mkdir -p #{d}", :pty => true
-#         run "#{sudo} chmod g+w                  #{d}", :pty => true
-#         run "#{sudo} chown #{user}:#{ugroup}    #{d}", :pty => true
-          run <<-CMD
-              #{sudo}  " umask #{umask} && mkdir -p #{d} \
-                      && chmod g+w                  #{d} \
-                      && chown #{user}:#{ugroup}    #{d} "
-          CMD
+        dirs.each do |d|
+            puts "  * Creating [#{d}]"
+#           run "#{sudo} umask #{umask} && mkdir -p #{d}", :pty => true
+            run "#{sudo} mkdir -p                #{d}", :pty => true
+            run "#{sudo} chmod g+w               #{d}", :pty => true
+            run "#{sudo} chown #{user}:#{ugroup} #{d}", :pty => true
         end
         run "ln -nfs #{releases_path}/1 #{deploy_to}/current"
         puts " Dirs created."
     end
+
+  end
+
+end
+
 

@@ -5,14 +5,19 @@ CapistranoHelpers.with_configuration do
 
   namespace :deploy do
 
-    if    ENV['TAG']     _msg = "TAG=#{branch}"
-    elsif ENV['BRANCH']  _msg = "BRANCH=#{branch}"
-    else                 _msg = "#{branch}"
+    if    ENV['TAG']
+      _msg = "TAG=#{branch}"
+    elsif ENV['BRANCH']
+      _msg = "BRANCH=#{branch}"
+    else
+      _msg = "{branch}"
     end
+
+    puts "  * Version = [#{_msg}]"
 
     desc "Write the name of the tag that we're deploying to a VERSION file"
     task :write_version_file do
-      run "echo  \"#{_msg}\" > #{release_path}/VERSION"
+      run "echo  '#{_msg}' > #{release_path}/VERSION"
     end
 
   end
