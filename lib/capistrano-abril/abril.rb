@@ -3,18 +3,18 @@ require File.dirname(__FILE__) + '/../capistrano-abril' if ! defined?(Capistrano
 CapistranoAbril.with_configuration do
 
   def _mytime
-    Time.now.utc.strftime("%Y-%m-%d-%H%M")
+    Time.now.strftime("%Y-%m-%d-%H%M")
   end
 
   # Abril defaults
   set :release_name  , _mytime()
-  set :ugroup        , fetch(:ugroup , "infra" )
-  set :umask         , fetch(:umask  , "002"   )
+  set :ugroup        , "infra"
+  set :umask         , "002"
 
 # set :group_writable, fetch(:group_writable, true )
 
-  set :keep_releases , fetch(:keep_releases, 5    )
-  set :use_sudo      , fetch(:use_sudo     , false)
+  set :keep_releases , 5
+  set :use_sudo      , false
 
   set :base_path     , "/abd"
   set :app_path      , "#{base_path}/app"
