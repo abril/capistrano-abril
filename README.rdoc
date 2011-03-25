@@ -22,7 +22,7 @@ Here's an example config/deploy.rb that uses a few helpers:
 
   require 'capistrano-abril/branch'     # Deploy by BRANCH/TAG/commit
   require 'capistrano-abril/bundler'    # Runs "bundle install" correctly
-  require 'capistrano-abril/config'     # Symlink to config file
+  require 'capistrano-abril/config_files'     # Symlink to config file
   require 'capistrano-abril/multistage' # Support to multistage scenarios
   require 'capistrano-abril/passenger'  # Support for Apache passenger
   require 'capistrano-abril/setup'      # deploy:setup as supposed to be.
@@ -204,5 +204,81 @@ After requiring this helper, set the paths to be symlinked using the
 
 Creates a VERSION file in the deployed copy that contains the name of the
 branch/tag that was deployed.
+
+
+== Exemplos
+
+
+=== Simple Rails Application
+
+  ###
+  ### mysite1
+  ###
+
+  #
+  # Deploy Settings
+  #
+    set :user            , "mysite1"
+    set :port            , 22
+    set :application     , "mysite1"
+    set :repository      , "github.com/teste/mysite1"
+    set :repository_cache, "git-#{application}"
+
+  #
+  # Tasks
+  #
+    require 'capistrano-abril/abril'        # Abril defaults
+    require 'capistrano-abril/branch'       # Deploy by BRANCH/TAG/commit
+    require 'capistrano-abril/bundler'      # Runs "bundle install" correctly
+    require 'capistrano-abril/config_files' # Symlinks to config/
+    require 'capistrano-abril/git'          # Git defaults
+    require 'capistrano-abril/multistage'   # Support to multistage scenarios
+    require 'capistrano-abril/passenger'    # Support for Apache passenger
+    require 'capistrano-abril/symlinks'     # Symlinks to RAILS_ROOT
+    require 'capistrano-abril/setup'        # deploy:setup as supposed to be.
+    require 'capistrano-abril/version'      # Record the version number after deploying
+
+    after "deploy:symlink", "deploy:cleanup"
+
+=== Alexandria
+
+  ###                                                         |  ###
+  ### Site-Reference                                          |  ### Site-Structure
+  ###                                                         |  ###
+                                                              |
+  #                                                           |  #
+  # Deploy Settings                                           |  # Deploy Settings
+  #                                                           |  #
+  set :user            , "siteref"                            |  set :user            , "siteref"
+  set :port            , 22                                   |  set :port            , 22
+                                                              |
+  set :application     , "site-reference"                     |  set :application     , "site-reference"
+  set :repository      , "git:/temp/alx-demo-reference.git"   |  set :repository      , "git:/temp/alx-demo-structure.git"
+  set :repository_cache, "git-#{application}"                 |  set :repository_cache, "git-#{application}"
+                                                              |
+  set :structure_path  , "/abd/app/#{application}/structure"  |  set :structure_path  , "/abd/app/#{application}/structure"
+                                                              |
+  #                                                           |  #
+  # Tasks                                                     |  # Tasks
+  #                                                           |  #
+  require 'capistrano-abril/abril'                            |  require 'capistrano-abril/abril'
+  require 'capistrano-abril/branch'                           |  require 'capistrano-abril/branch'
+  require 'capistrano-abril/bundler'                          |  require 'capistrano-abril/git'
+  require 'capistrano-abril/config_files'                     |  require 'capistrano-abril/multistage'
+  require 'capistrano-abril/git'                              |  require 'capistrano-abril/setup'
+  require 'capistrano-abril/multistage'                       |  require 'capistrano-abril/version'
+  require 'capistrano-abril/passenger'                        |
+  require 'capistrano-abril/symlinks'                         |
+  require 'capistrano-abril/setup'                            |
+  require 'capistrano-abril/version'                          |
+                                                              |
+  require 'capistrano-abril/site-reference'                   |  require 'capistrano-abril/site-structure'
+                                                              |
+  after "deploy:symlink", "deploy:cleanup"                    |  after "deploy:symlink", "deploy:cleanup"
+
+
+=== PHP
+
+TODO
 
 
