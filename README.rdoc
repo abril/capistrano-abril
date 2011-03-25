@@ -7,6 +7,8 @@ Based on 'capistrano-helpers' gem.
 
 All deploys are expected to have multistage scenarios.
 Some reference:
+    http://help.github.com/capistrano/
+	http://help.github.com/deploy-keys
     https://github.com/leehambley/capistrano-handbook/blob/master/index.markdown
 
 == Usage
@@ -33,11 +35,25 @@ Here's an example config/deploy.rb that uses a few helpers:
 
 
 That's it! The recipe will now also perform the actions described by the
-helpers (in this case, the campfire helper also requires the tinder gem and
-a config/campfire.yml file).
+helpers: ask for a branch, call bundle install, use multistage and so on.
 
 == Helpers
 
+=== abril
+
+Defines all deploy variables used to put the app in the expected directory
+tree:
+	/abd/app/mysite1
+	/abd/app/mysite1/config
+	/abd/app/mysite1/git-mysite1
+	/abd/app/mysite1/current     -> /abd/app/mysite1/releseas/2011-02-01-1015
+	/abd/app/mysite1/current/log -> /abd/logs/mysite1
+	/abd/app/mysite1/current/tmp
+	/abd/app/mysite1/current/tmp/pids -> /abd/logs/mysite1
+	/abd/app/mysite1/releases
+	/abd/app/mysite1/releases/2011-02-01-1015
+	/abd/logs/mysite1
+	
 === branch
 
 Sets branch/tag/commit to deploy from the command line:
@@ -55,16 +71,31 @@ If not, prompts the user for the particular tag/branch/commit to deploy:
 
 Automatically install gems from your Gemfile at the appropriate time.
 
-Executes after update_code:
-    bundle install --deployment
+In production:
+    bundle install --deployment --without test development
 
-=== config
+Other environments:
+	bundle install --deployment
 
-...
+
+=== config_files
+
+Link all desired config files, local to the deployment server inside
+'#{shared_path}/config', to #{latest_release}/config dir.
+
+
+	### Symlink from #{shared_path}/config to #{latest_release}/config
+	###     file(s) => destination
+	set :config_files, {
+	    '*.yml'          => "config/",
+	    'production.rb'  => "config/environments/"
+	}
 
 === gems
 
 Run the gems:install rake task using sudo after deployment.
+
+Tip: is best to use bundler helper.
 
 === multistage
 
@@ -73,11 +104,14 @@ config/deploy/ listing the group of servers/roles to deploy to.
 
 Example:
 
-  * File config/deploy/dev.rb
+  * File config/deploy/dev.rb (example using 'roles')
 
         server "192.168.1.101", :db, :app, :web
+        role :app, "192.168.1.101"
+        role :web, "192.168.1.101"
+        role :db , "192.168.1.101", :primary => true
 
-  * File config/deploy/prod.rb
+  * File config/deploy/prod.rb (example using 'server')
 
         server "app-ws01.example.com", :web, :app
         server "app-ws02.example.com", :web, :app
@@ -87,10 +121,10 @@ Example:
 
 Using:
 
-    # Deploy to development:
+    # Deploy to development (Multistage 'dev'):
     $ BRANCH=master   cap dev deploy
 
-    # Deploy to production:
+    # Deploy to production (Multistage 'prod'):
     $ TAG=release-1.0 cap prod deploy
 
 
@@ -109,47 +143,6 @@ Use this helper when using capistrano to deploy a purely PHP application.
 
 All rails specific tasks are not executed.
 
-
-=== shared
-
-During deployment, this helper replaces each of the given paths with a
-symbolic link that points to the same path under the "shared" directory on the
-server. This is useful for setting up files and directories that contain
-data that should persist across deployments (uploads, for example).
-
-After requiring this helper, set the paths to be symlinked using the
-:shared variable:
-
-  set :shared, %w{
-    public/uploads
-    public/downloads/huge_files
-  }
-
-This will create two symbolic links on the production server:
-
-  #{release_path}/public/uploads              -> #{shared_path}/public/uploads
-  #{release_path}/public/downloads/huge_files -> #{shared_path}/public/downloads/huge_files
-
-=== privates
-
-This works much like the shared helper above, except the symbolic link will
-point to the same path under "shared/private" on the server. This allows you
-to set special permissions on that directory for keeping particularly
-sensitive files safe, such as those that contain passwords or encryption keys.
-
-After requiring this helper, set the paths to be symlinked using the
-:privates variable:
-
-  set :privates, %w{
-    config/database.yml
-    config/session_secret.txt
-  }
-
-This will create two symbolic links on the production server:
-
-  #{release_path}/config/database.yml       -> #{shared_path}/private/config/database.yml
-  #{release_path}/config/session_secret.txt -> #{shared_path}/private/config/session_secret.txt
-
 === site-reference
 
 Alexandria: deploy this app as a site-reference clone.
@@ -159,28 +152,52 @@ An applications must be either of type site-reference or site-structure, not bot
 Must be defined:
     set :structure_path = /abd/app/mysite/structure
 
+At the end the following link is created:
+	/abd/app/mysite/current/structure -> /abd/app/mysite/structure/current
+
+
 === site-structure
 
-Alexandria: deploy this app as a site-structure app.
+Alexandria: deploy this app as a site-structure app, using a directory
+structure inside /abd/app/mysite/structure:
 
-An applications must be either of type site-reference or site-structure, not both.
+	/abd/app/mysite1/structure/
+	/abd/app/mysite1/structure/config
+	/abd/app/mysite1/structure/git-mysite1-structure
+	/abd/app/mysite1/structure/current ->
+	/abd/app/mysite1/structure/releases
+	/abd/app/mysite1/structure/releases/2011-03-02-1445
 
-Must be defined:
-    set :structure_path = /abd/app/mysite/structure
 
 === specs
 
 Before the app is deployed, this helper checks out the branch/tag that is
 being deployed and runs all the rspec specs, ensuring that they all pass.
 
+=== symlinks
+
+During deployment, this helper replaces each of the given paths with a
+symbolic link that points to files or directories that contain data 
+that should persist across deployments (uploads, assets, for example).
+
+After requiring this helper, set the paths to be symlinked using the
+:symlinks variable:
+
+	### Symlink inside RAILS_ROOT
+	###     path => destination
+	set :symlinks, {
+	    '/data/libc'       => "public/libc"  ,
+	    '/data/tst/assets' => "public/assets",
+	    '/data/tst/static' => "public/static",
+	}
+
 === version
 
 Creates a VERSION file in the deployed copy that contains the name of the
-branch/tag that was deployed. Useful for displaying version information in the
-app itself.
+branch/tag that was deployed.
+
 
 == Copyright
 
 Copyright (c) 2011 ????
-
 
