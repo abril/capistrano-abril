@@ -5,7 +5,7 @@ CapistranoAbril.with_configuration do
 
   namespace :deploy do
 
-    desc "Write the name of the tag that we're deploying to a VERSION file"
+    desc "[internal] Write the name of the tag that we're deploying to a VERSION file"
     task :write_version_file do
 
       if    ENV['TAG']    then _msg = "TAG=#{branch}"
