@@ -19,6 +19,18 @@ CapistranoAbril.with_configuration do
     before "deploy:update", "deploy:do_site_structure"
     before "deploy:setup" , "deploy:do_site_structure"
 
+    desc "[internal] Clean up unused dirs."
+    task :cleanup_structure do
+        run "/bin/rm -rf #{shared_path}/{log,pids,system} #{latest_release}/public/system"
+        run "/bin/rm -rf #{latest_release}/{log,/tmp/pids}"
+
+        # qbg
+        run "/bin/cp -rp #{deploy_to}/#{repository_cache}/.git #{latest_release}/"
+
+      end
+
+    after  "deploy:finalize_update" , "deploy:cleanup_structure"
+
   end
 
 end

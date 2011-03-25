@@ -12,7 +12,7 @@ CapistranoAbril.with_configuration do
       end
 
       run "mkdir -p #{structure_path} && chmod g+w #{structure_path}"
-      run "rm -rf #{latest_release}/public/structure && ln -nsf  #{structure_path} #{latest_release}/public/structure"
+      run "rm -rf #{latest_release}/structure && ln -nsf  #{structure_path}/current #{latest_release}/structure"
 
     end
 
