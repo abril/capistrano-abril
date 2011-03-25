@@ -31,7 +31,7 @@ CapistranoAbril.with_configuration do
             run "#{sudo} chown #{user}:#{ugroup} #{d}", :pty => true
         end
         run "ln -nfs #{releases_path}/1 #{deploy_to}/current"
-        puts " Dirs created."
+        puts "  * Dirs created."
     end
 
   end

@@ -18,7 +18,7 @@ CapistranoAbril.with_configuration do
     end
 
     stages.each do |name|
-      desc "Set the target stage to `#{name}'."
+      desc "Multistage scenario: '#{name}'."
       task(name) do
         set :mstage, name.to_sym
         load "#{location}/#{mstage}"
@@ -40,10 +40,10 @@ CapistranoAbril.with_configuration do
       task :ensure do
         if !exists?(:mstage)
           if exists?(:default_stage)
-            logger.important "Defaulting to `#{default_stage}'"
+            logger.important "Defaulting to '#{default_stage}'"
             find_and_execute_task(default_stage)
           else
-            abort "No stage specified. Please specify one of: #{stages.join(', ')} (e.g. `cap #{stages.first} #{ARGV.last}')"
+            abort "No stage specified. Please specify one of: #{stages.join(', ')} (e.g. 'cap #{stages.first} #{ARGV.last}')"
           end
         end
       end

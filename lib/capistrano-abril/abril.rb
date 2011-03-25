@@ -11,8 +11,6 @@ CapistranoAbril.with_configuration do
   set :ugroup        , "infra"
   set :umask         , "002"
 
-# set :group_writable, fetch(:group_writable, true )
-
   set :keep_releases , 5
   set :use_sudo      , false
 
@@ -44,9 +42,9 @@ CapistranoAbril.with_configuration do
 
   namespace :deploy do
 
-    desc "Cleaning up unused dirs."
+    desc "[internal] Clean up unused dirs."
     task :cleanup_shared do
-        run "/bin/rm -rf #{shared_path}/{log,pids,system}"
+        run "/bin/rm -rf #{shared_path}/{log,pids,system} #{latest_release}/public/system"
         run "ln -nsf #{logs_path} #{latest_release}/log      "
         run "ln -nsf #{logs_path} #{latest_release}/tmp/pids "
       end
@@ -67,5 +65,7 @@ CapistranoAbril.with_configuration do
 
   end
 
+
+# set :group_writable, fetch(:group_writable, true )
 
 end
