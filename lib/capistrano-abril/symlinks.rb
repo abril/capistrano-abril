@@ -4,7 +4,7 @@ CapistranoAbril.with_configuration do
 
   namespace :deploy do
 
-    desc 'Replace named files with a symlink to their counterparts in shared/'
+    desc '[internal] Replace named files with a symlink to their counterparts in shared/'
     task :do_symlinks do
 
       if !exists?(:symlinks)
@@ -25,7 +25,7 @@ CapistranoAbril.with_configuration do
 
   end
 
-  after "deploy:update_code", "deploy:symlink_shared"
+  after "deploy:symlink", "deploy:do_symlinks"
 
 end
 
