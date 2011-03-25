@@ -47,6 +47,8 @@ CapistranoAbril.with_configuration do
     desc "Cleaning up unused dirs."
     task :cleanup_shared do
         run "/bin/rm -rf #{shared_path}/{log,pids,system}"
+        run "ln -nsf #{logs_path} #{latest_release}/log      "
+        run "ln -nsf #{logs_path} #{latest_release}/tmp/pids "
       end
 
     after  "deploy:finalize_update" , "deploy:cleanup_shared"
