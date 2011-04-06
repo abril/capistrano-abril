@@ -272,6 +272,7 @@ branch/tag that was deployed.
   require 'capistrano-abril/setup'                            |
   require 'capistrano-abril/version'                          |
                                                               |
+  ### SITE-REFERENCE                                          |  ### SITE-STRUCTURE
   require 'capistrano-abril/site-reference'                   |  require 'capistrano-abril/site-structure'
                                                               |
   after "deploy:symlink", "deploy:cleanup"                    |  after "deploy:symlink", "deploy:cleanup"
