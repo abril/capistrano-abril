@@ -8,7 +8,7 @@ CapistranoAbril.with_configuration do
     [:start, :stop, :restart, :status].each do |t|
         desc "(memcached.rb) sudo /etc/init.d/memcached #{t}"
         task t, :roles => :app, :except => { :no_release => true } do
-          run "sudo /etc/init.d/memcached #{t}"
+          run "#{sudo} /etc/init.d/memcached #{t}", :pty => true
         end
     end
 

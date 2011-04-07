@@ -82,7 +82,7 @@ CapistranoAbril.with_configuration do
     [:start, :stop, :restart, :status].each do |t|
         desc "(abril.rb) sudo apachectl #{t}"
         task t, :roles => :app, :except => { :no_release => true } do
-          run "sudo apachectl #{t}"
+          run "#{sudo} apachectl #{t}", :pty => true
         end
     end
 
