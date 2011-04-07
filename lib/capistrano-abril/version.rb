@@ -5,7 +5,7 @@ CapistranoAbril.with_configuration do
 
   namespace :deploy do
 
-    desc "[internal] Write the name of the tag that we're deploying to a VERSION file"
+    desc "(version.rb) [internal] Write the name of the tag that we're deploying to a VERSION file"
     task :write_version_file do
 
       if    ENV['TAG']    then _msg = "TAG=#{branch}"
@@ -18,10 +18,9 @@ CapistranoAbril.with_configuration do
       run "echo  '#{_msg}' >  #{release_path}/VERSION"
       run "echo  '#{_msg}' >> #{release_path}/REVISION"
     end
+    after "deploy:update_code", "deploy:write_version_file"
 
-  end
-
-  after "deploy:update_code", "deploy:write_version_file"
+  end # namespace
 
 end
 

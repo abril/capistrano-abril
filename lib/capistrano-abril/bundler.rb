@@ -4,7 +4,7 @@ CapistranoAbril.with_configuration do
 
   namespace :bundle do
 
-    desc "Install gems on the remote server using Bundler."
+    desc "(bundler.rb) Install gems on the remote server using Bundler."
     task :install do
 
       run "mkdir -p #{shared_path}/bundle"
@@ -20,11 +20,9 @@ CapistranoAbril.with_configuration do
       end
 
     end
+    after "deploy:update_code", "bundle:install"
 
-  end
-
-# after "deploy:symlink_shared" , "deploy:bundler"
-  after "deploy:update_code"    , "bundle:install"
+  end # namespace
 
 end
 

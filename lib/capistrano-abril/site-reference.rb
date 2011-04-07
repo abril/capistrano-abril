@@ -4,7 +4,7 @@ CapistranoAbril.with_configuration do
 
   namespace :deploy do
 
-    desc 'Make :structure_path as expected by Alexandria site-reference'
+    desc '(site-reference.rb ) Alexandria site-reference'
     task :do_site_reference do
 
       if !exists?(:structure_path)
@@ -15,10 +15,10 @@ CapistranoAbril.with_configuration do
       run "rm -rf #{latest_release}/structure && ln -nsf  #{structure_path}/current #{latest_release}/structure"
 
     end
+    after "deploy:symlink", "deploy:do_site_reference"
 
-  end
+  end # namespace
 
-  after "deploy:symlink", "deploy:do_site_reference"
 
 end
 

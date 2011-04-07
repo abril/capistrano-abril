@@ -2,9 +2,9 @@ require File.dirname(__FILE__) + '/../capistrano-abril' if ! defined?(Capistrano
 require File.dirname(__FILE__) + '/branch'
 
 CapistranoAbril.with_configuration do
- 
+
   namespace :deploy do
-    desc "Make sure all specs pass"
+    desc "(specs.rb) Make sure all specs pass"
     task :check_specs do
       if scm != 'git'
         abort "Sorry, you can only check specs if you're using git as your scm."
@@ -26,8 +26,8 @@ CapistranoAbril.with_configuration do
       end
       abort if @failed
     end
-  end
-
+  end # namespace
   before "deploy:update_code", "deploy:check_specs"
 
 end
+

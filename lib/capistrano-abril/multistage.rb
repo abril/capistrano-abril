@@ -4,7 +4,7 @@ require 'fileutils'
 
 CapistranoAbril.with_configuration do
 
-### Shameless copying from Jamis capistrano/ext,
+### Shameless copy from Jamis capistrano/ext,
 ### and correcting :stage -> :mstage so I can use
 ###
 ###      cap stage deploy
@@ -18,7 +18,7 @@ CapistranoAbril.with_configuration do
     end
 
     stages.each do |name|
-      desc "Multistage scenario: '#{name}'."
+      desc "(multistage.rb) cap #{name} deploy ..."
       task(name) do
         set :mstage, name.to_sym
         load "#{location}/#{mstage}"
@@ -35,8 +35,9 @@ CapistranoAbril.with_configuration do
       end
     end
 
-    namespace :multistage do# {
-      desc "[internal] Ensure that a stage has been selected."
+    namespace :multistage do # {
+
+      desc "(multistage.rb) [internal] Ensure that a stage has been selected."
       task :ensure do
         if !exists?(:mstage)
           if exists?(:default_stage)
@@ -48,7 +49,7 @@ CapistranoAbril.with_configuration do
         end
       end
 
-      desc "Stub out the staging config files."
+      desc "(multistage.rb) Stub out the staging config files."
       task :prepare do
         FileUtils.mkdir_p(location)
         stages.each do |name|
@@ -61,10 +62,12 @@ CapistranoAbril.with_configuration do
           end
         end
       end
-    end
 
+    end # namespace
     on :start, "multistage:ensure", :except => stages + ['multistage:prepare']
-  end
-# }
+    # }
+
+  end # Capistrano::Configuration
+
 end
 

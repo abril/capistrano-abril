@@ -4,11 +4,11 @@ CapistranoAbril.with_configuration do
 
   namespace :deploy do
 
-    desc '[internal] Replace named files with a symlink to their counterparts in shared/'
+    desc '(symlinks.rb) [internal] Replace named files with a symlink to their counterparts in shared/'
     task :do_symlinks do
 
       if !exists?(:symlinks)
-        abort 'You must specify which files to symlink using the "set :symlinks" command.'
+        abort 'You must specify "set :symlinks" command. See README.'
       end
 
       symlinks.each do |path,destination|
@@ -22,10 +22,9 @@ CapistranoAbril.with_configuration do
       end
 
     end
+    after "deploy:symlink", "deploy:do_symlinks"
 
-  end
-
-  after "deploy:symlink", "deploy:do_symlinks"
+  end # namespace
 
 end
 

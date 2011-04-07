@@ -8,6 +8,7 @@ CapistranoAbril.with_configuration do
 
   namespace :deploy do
 
+<<<<<<< HEAD
     ### setup_vars
     desc "(abril.rb) [internal] Setting up vars"
     task :setup_vars, :roles => :app, :except => { :no_release =>  true } do

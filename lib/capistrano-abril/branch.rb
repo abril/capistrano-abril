@@ -4,8 +4,9 @@ CapistranoAbril.with_configuration do
 
   namespace :deploy do
 
-    desc "[internal] Ensure that a branch has been selected."
+    desc "(branch.rb) [internal] Ensure that a branch has been selected."
     task :set_branch do
+
       if !exists?(:branch)
 
         set :branch, ENV['TAG'] || ENV['BRANCH'] \
@@ -13,10 +14,11 @@ CapistranoAbril.with_configuration do
 
       end
 
-    end
-
+    end # task
+    # on :start, :set_branch
     before  "deploy:update" , "deploy:set_branch"
-  end
+
+  end # namespace
 
 end
 

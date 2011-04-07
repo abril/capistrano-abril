@@ -4,10 +4,8 @@ CapistranoAbril.with_configuration do
 
   namespace :deploy do
 
-# default_run_options[:pty] = true
-
     desc <<-DESC
-      setup: create initial directories for all hosts.
+      (setup.rb): create initial directories for all hosts.
       For a specific host:
         $ cap HOSTS=new.server.com deploy:setup
     DESC
@@ -34,7 +32,7 @@ CapistranoAbril.with_configuration do
         puts "  * Dirs created."
     end
 
-  end
+  end # namespace
 
 end
 
