@@ -14,9 +14,7 @@ CapistranoAbril.with_configuration do
       end
 
       puts "  * Version [#{_msg}]"
-
       run "echo  '#{_msg}' >  #{release_path}/VERSION"
-      run "echo  '#{_msg}' >> #{release_path}/REVISION"
     end
     after "deploy:update_code", "deploy:write_version_file"
 
