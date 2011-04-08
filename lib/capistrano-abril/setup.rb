@@ -31,6 +31,7 @@ CapistranoAbril.with_configuration do
         run "ln -nfs #{releases_path}/1 #{deploy_to}/current"
         puts "  * Dirs created."
     end
+    before "deploy:setup" , "deploy:setup_vars"
 
   end # namespace
 
