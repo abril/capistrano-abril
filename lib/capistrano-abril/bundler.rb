@@ -8,15 +8,12 @@ CapistranoAbril.with_configuration do
     task :install do
 
       run "mkdir -p #{shared_path}/bundle"
-
-      if ENV['RAILS_ENV'] == 'production'
-          run <<-CMD
-            bundle install --gemfile #{latest_release}/Gemfile --path #{shared_path}/bundle --deployment --without development test
-          CMD
+      if "#{rails_env}" != 'production'
+          # dev/qa
+          run "bundle install --gemfile #{latest_release}/Gemfile --path #{shared_path}/bundle --deployment"
       else
-          run <<-CMD
-            bundle install --gemfile #{latest_release}/Gemfile --path #{shared_path}/bundle --deployment
-          CMD
+          # stage/prod
+          run "bundle install --gemfile #{latest_release}/Gemfile --path #{shared_path}/bundle --deployment --without development test"
       end
 
     end
