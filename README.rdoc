@@ -20,26 +20,32 @@ time during deployment.
 
 Here's an example config/deploy.rb that uses a few helpers:
 
-  require 'capistrano-abril/branch'     # Deploy by BRANCH/TAG/commit
-  require 'capistrano-abril/bundler'    # Runs "bundle install" correctly
-  require 'capistrano-abril/config_files'     # Symlink to config file
-  require 'capistrano-abril/multistage' # Support to multistage scenarios
-  require 'capistrano-abril/passenger'  # Support for Apache passenger
-  require 'capistrano-abril/setup'      # deploy:setup as supposed to be.
-  require 'capistrano-abril/version'    # Record the version number after deploying
-
   # Parameters
-  set :application , "myapp"
-  set :scm         , "git"
-  set :repository  , "git@github.com:mycompany/myapp.git"
+  set :user   , "myapp"
+  set :port   , 22
 
+  set :application     , "myapp"
+  set :repository      , "git@github.com:mycompany/myapp.git"
+  set :repository_cache, "git-#{application}"
+
+  require 'capistrano-abril/abril'         # Abril defaults
+  require 'capistrano-abril/git'           # Git defaults
+  require 'capistrano-abril/setup'         # 'deploy:setup' as supposed to be.
+  require 'capistrano-abril/version'       # Deploy version
+  require 'capistrano-abril/multistage'    # Support to multistage scenarios
+  require 'capistrano-abril/branch'        # Deploy by BRANCH/TAG/commit
+  require 'capistrano-abril/bundler'       # 'bundle install' correctly
+  require 'capistrano-abril/passenger'     # 'restart' for Apache passenger
+  require 'capistrano-abril/config_files'  # Symlink to config files
+  require 'capistrano-abril/symlinks'      # Symlink to any dir/file
 
 That's it! The recipe will now also perform the actions described by the
 helpers: ask for a branch, call bundle install, use multistage and so on.
 
+
 == Helpers
 
-=== abril
+=== capistrano-abril/abril
 
 Defines all deploy variables used to put the app in the expected directory
 tree:
@@ -54,7 +60,17 @@ tree:
     /abd/app/mysite1/releases/2011-02-01-1015
     /abd/logs/mysite1
 
-=== branch
+
+=== capistrano-abril/alx-structure
+
+Alexandria: deploy this app as an Alexandria site.
+
+Must be defined:
+    set :structure_repos , "git@codebasehq.com:abril/migracao/myapp1-structure.git"
+    set :structure_branch, "master"
+
+
+=== capistrano-abril/branch
 
 Sets branch/tag/commit to deploy from the command line:
 
@@ -67,7 +83,7 @@ If not, prompts the user for the particular tag/branch/commit to deploy:
     $ cap dev deploy       # will prompt user
 
 
-=== bundler
+=== capistrano-abril/bundler
 
 Automatically install gems from your Gemfile at the appropriate time.
 
@@ -84,8 +100,17 @@ Other environments:
                  --deployment
 
 
+=== capistrano-abril/check_rails2
 
-=== config_files
+Runs 'script/runner' to test all app dependencies before startup.
+
+
+=== capistrano-abril/check_rails3
+
+Executes 'rails runner' to test all app dependencies before startup.
+
+
+=== capistrano-abril/config_files
 
 Link all desired config files, local to the deployment server inside
 '#{shared_path}/config', to #{latest_release}/config dir.
@@ -98,13 +123,31 @@ Link all desired config files, local to the deployment server inside
         'production.rb'  => "config/environments/"
     }
 
-=== gems
+
+=== capistrano-abril/gems
 
 Run the gems:install rake task using sudo after deployment.
 
-Tip: is best to use bundler helper.
+Tip: is best to use capistrano-abril/bundler.
 
-=== multistage
+
+=== capistrano-abril/git
+
+Defaults when using git to deploy.
+
+
+=== capistrano-abril/memcached
+
+Adds task to start/stop/status memcached servers.
+
+When using this helper you must specify which servers are running memcached:
+
+        server "app-ws01.example.com", :web, :app, :memcached
+        server "app-ws02.example.com", :web, :app, :memcached
+        server "app-db01.example.com", :db , :primary => true
+
+
+=== capistrano-abril/multistage
 
 Define different scenarios (stages) to deploy to. Each stage is a file placed in
 config/deploy/ listing the group of servers/roles to deploy to.
@@ -135,55 +178,43 @@ Using:
     $ TAG=release-1.0 cap prod deploy
 
 
-=== migrations
-
-Always run migrations during deployment. Optional.
-
-=== passenger
+=== capistrano-abril/passenger
 
 Overrides the default :restart task so that it's compatible with restarting
 apache/passenger (aka mod_rails). Touches tmp/restart.txt.
 
-=== php
+
+=== capistrano-abril/php
 
 Use this helper when using capistrano to deploy a purely PHP application.
 
 All rails specific tasks are not executed.
 
-=== site-reference
 
-Alexandria: deploy this app as a site-reference clone.
+=== capistrano-abril/redis
 
-An applications must be either of type site-reference or site-structure, not both.
+Adds task to start/stop/status redis servers.
 
-Must be defined:
-    set :structure_path = /abd/app/mysite/structure
+When using this helper you must specify which servers are running redis:
 
-At the end the following link is created:
-    /abd/app/mysite/current/structure
-
-pointing to the latest release of a site-structure deploy.
+        server "app-ws01.example.com", :web, :app, :redis
+        server "app-ws02.example.com", :web, :app, :redis
+        server "app-db01.example.com", :db , :primary => true
 
 
-=== site-structure
+=== capistrano-abril/setup
 
-Alexandria: deploy this app as a site-structure app, using a directory
-structure inside /abd/app/mysite/structure:
-
-    /abd/app/mysite1/structure/
-    /abd/app/mysite1/structure/config
-    /abd/app/mysite1/structure/git-mysite1-structure
-    /abd/app/mysite1/structure/current -> releases/2011-03-02-1445
-    /abd/app/mysite1/structure/releases
-    /abd/app/mysite1/structure/releases/2011-03-02-1445
+Defines 'deploy:setup' to create all directories correctly, respecting
+':umask' and 'ugroup'.
 
 
-=== specs
+=== capistrano-abril/specs
 
 Before the app is deployed, this helper checks out the branch/tag that is
 being deployed and runs all the rspec specs, ensuring that they all pass.
 
-=== symlinks
+
+=== capistrano-abril/symlinks
 
 During deployment, this helper replaces each of the given paths with a
 symbolic link that points to files or directories that contain data
@@ -200,7 +231,8 @@ After requiring this helper, set the paths to be symlinked using the
         '/data/tst/static' => "public/static",
     }
 
-=== version
+
+=== capistrano-abril/version
 
 Creates a VERSION file in the deployed copy that contains the name of the
 branch/tag that was deployed.
@@ -218,64 +250,65 @@ branch/tag that was deployed.
   #
   # Deploy Settings
   #
-    set :user            , "mysite1"
-    set :port            , 22
-    set :application     , "mysite1"
-    set :repository      , "github.com/teste/mysite1"
-    set :repository_cache, "git-#{application}"
+  set :user             , "mysite1"
+  set :port             , 22
+  set :application      , "mysite1"
+  set :repository       , "github.com/teste/mysite1"
+  set :repository_cache , "git-#{application}"
 
   #
   # Tasks
   #
-    require 'capistrano-abril/abril'        # Abril defaults
-    require 'capistrano-abril/branch'       # Deploy by BRANCH/TAG/commit
-    require 'capistrano-abril/bundler'      # Runs "bundle install" correctly
-    require 'capistrano-abril/config_files' # Symlinks to config/
-    require 'capistrano-abril/git'          # Git defaults
-    require 'capistrano-abril/multistage'   # Support to multistage scenarios
-    require 'capistrano-abril/passenger'    # Support for Apache passenger
-    require 'capistrano-abril/symlinks'     # Symlinks to RAILS_ROOT
-    require 'capistrano-abril/setup'        # deploy:setup as supposed to be.
-    require 'capistrano-abril/version'      # Record the version number after deploying
+  require 'capistrano-abril/abril'         # Abril defaults
+  require 'capistrano-abril/git'           # Git defaults
+  require 'capistrano-abril/setup'         # 'deploy:setup' as supposed to be.
+  require 'capistrano-abril/version'       # Deploy version
+  require 'capistrano-abril/multistage'    # Support to multistage scenarios
+  require 'capistrano-abril/branch'        # Deploy by BRANCH/TAG/commit
+  require 'capistrano-abril/bundler'       # 'bundle install' correctly
+  require 'capistrano-abril/passenger'     # 'restart' for Apache passenger
+  require 'capistrano-abril/config_files'  # Symlink to config files
+  require 'capistrano-abril/symlinks'      # Symlink to any dir/file
 
-    after "deploy:symlink", "deploy:cleanup"
+  require 'capistrano-abril/alx-structure' # This is an Alexandria site
+
 
 === Alexandria
 
-  ###                                                         |  ###
-  ### Site-Reference                                          |  ### Site-Structure
-  ###                                                         |  ###
-                                                              |
-  #                                                           |  #
-  # Deploy Settings                                           |  # Deploy Settings
-  #                                                           |  #
-  set :user            , "siteref"                            |  set :user            , "siteref"
-  set :port            , 22                                   |  set :port            , 22
-                                                              |
-  set :application     , "site-reference"                     |  set :application     , "site-reference"
-  set :repository      , "git:/temp/alx-demo-reference.git"   |  set :repository      , "git:/temp/alx-demo-structure.git"
-  set :repository_cache, "git-#{application}"                 |  set :repository_cache, "git-#{application}"
-                                                              |
-  set :structure_path  , "/abd/app/#{application}/structure"  |  set :structure_path  , "/abd/app/#{application}/structure"
-                                                              |
-  #                                                           |  #
-  # Tasks                                                     |  # Tasks
-  #                                                           |  #
-  require 'capistrano-abril/abril'                            |  require 'capistrano-abril/abril'
-  require 'capistrano-abril/branch'                           |  require 'capistrano-abril/branch'
-  require 'capistrano-abril/bundler'                          |  require 'capistrano-abril/git'
-  require 'capistrano-abril/config_files'                     |  require 'capistrano-abril/multistage'
-  require 'capistrano-abril/git'                              |  require 'capistrano-abril/setup'
-  require 'capistrano-abril/multistage'                       |  require 'capistrano-abril/version'
-  require 'capistrano-abril/passenger'                        |
-  require 'capistrano-abril/symlinks'                         |
-  require 'capistrano-abril/setup'                            |
-  require 'capistrano-abril/version'                          |
-                                                              |
-  ### SITE-REFERENCE                                          |  ### SITE-STRUCTURE
-  require 'capistrano-abril/site-reference'                   |  require 'capistrano-abril/site-structure'
-                                                              |
-  after "deploy:symlink", "deploy:cleanup"                    |  after "deploy:symlink", "deploy:cleanup"
+  ###
+  ### Site-Reference
+  ###
+
+  #
+  # Deploy Settings
+  #
+  set :user            , "siteref"
+  set :port            , 22
+
+  # Site Reference
+  set :application     , "site-reference"
+  set :repository      , "git:/temp/alx-demo-reference.git"
+  set :repository_cache, "git-#{application}"
+
+  # Site Structure
+  set :structure_repos , "git@codebasehq.com:abril/temp/siteref-structure.git"
+  set :structure_branch, "master"
+
+  #
+  # Tasks
+  #
+  require 'capistrano-abril/abril'         # Abril defaults
+  require 'capistrano-abril/git'           # Git defaults
+  require 'capistrano-abril/setup'         # 'deploy:setup' as supposed to be.
+  require 'capistrano-abril/version'       # Deploy version
+  require 'capistrano-abril/multistage'    # Support to multistage scenarios
+  require 'capistrano-abril/branch'        # Deploy by BRANCH/TAG/commit
+  require 'capistrano-abril/bundler'       # 'bundle install' correctly
+  require 'capistrano-abril/passenger'     # 'restart' for Apache passenger
+  require 'capistrano-abril/config_files'  # Symlink to config files
+  require 'capistrano-abril/symlinks'      # Symlink to any dir/file
+
+  require 'capistrano-abril/alx-structure' # This is an Alexandria site
 
 
 === PHP
