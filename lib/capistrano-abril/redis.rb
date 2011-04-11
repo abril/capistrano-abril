@@ -7,7 +7,7 @@ CapistranoAbril.with_configuration do
     ### start/stop/restart
     [:start, :stop, :restart, :status].each do |t|
         desc "(redis.rb) sudo /etc/init.d/redis #{t}"
-        task t, :roles => :app, :except => { :no_release => true } do
+        task t, :roles => :redis, :except => { :no_release => true } do
           run "#{sudo} /etc/init.d/redis #{t}", :pty => true
         end
     end
