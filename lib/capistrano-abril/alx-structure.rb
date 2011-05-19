@@ -15,7 +15,7 @@ CapistranoAbril.with_configuration do
       end
 
       # Custom branch/tag ?
-      set :st_branch, ENV['TAG'] || ENV['BRANCH'] || :structure_branch || 'master'
+      set :st_branch, ENV['TAG'] || ENV['BRANCH'] || structure_branch || 'master'
 
       # structure clone
       # symlink inside site-reference
@@ -23,7 +23,7 @@ CapistranoAbril.with_configuration do
         if [ ! -d #{structure_path}/.git ] ;
         then echo "Cloning structure:"   &&
              git clone --depth 1 #{structure_repos} #{structure_path} &&
-             cd #{structure_path} && git checkout -b #{st_branch}     ;
+             cd #{structure_path} && git checkout -b #{st_branch} -t origin/#{st_branch};
         else echo "Resetting structure:" &&
              cd #{structure_path} && git reset --hard && git clean -d -x -f;
         fi ;
@@ -36,4 +36,5 @@ CapistranoAbril.with_configuration do
   end # namespace
 
 end
+
 
