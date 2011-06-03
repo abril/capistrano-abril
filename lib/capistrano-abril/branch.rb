@@ -10,7 +10,7 @@ CapistranoAbril.with_configuration do
       if !exists?(:branch)
 
         set :branch, ENV['TAG'] || ENV['BRANCH'] \
-          || Capistrano::CLI.ui.ask('Type TAG or BRANCH or SHA1 commit. (default: master)', 'master')
+          || Capistrano::CLI.ui.ask('Type TAG or BRANCH or SHA1 commit. (default: master)') || 'master'
 
       end
 
