@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Marcus Vinicius Ferreira"]
-  s.date = %q{2011-03-23}
+  s.date = %q{2011-06-08}
   s.description = %q{Defaults and recipes used in our deployments. Based on 'capistrano-helpers' gem.}
   s.email = %q{ferreira.mv@gmail.com}
   s.extra_rdoc_files = [
@@ -22,20 +22,32 @@ Gem::Specification.new do |s|
     "VERSION",
     "capistrano-abril.gemspec",
     "lib/capistrano-abril.rb",
+    "lib/capistrano-abril/abril.rb",
+    "lib/capistrano-abril/alx-structure.rb",
+    "lib/capistrano-abril/b.rb",
     "lib/capistrano-abril/branch.rb",
     "lib/capistrano-abril/bundler.rb",
+    "lib/capistrano-abril/check_rails2.rb",
+    "lib/capistrano-abril/check_rails3.rb",
+    "lib/capistrano-abril/config_files.rb",
     "lib/capistrano-abril/gems.rb",
     "lib/capistrano-abril/git.rb",
+    "lib/capistrano-abril/memcached.rb",
     "lib/capistrano-abril/multistage.rb",
     "lib/capistrano-abril/passenger.rb",
     "lib/capistrano-abril/php.rb",
+    "lib/capistrano-abril/redis.rb",
+    "lib/capistrano-abril/setup.rb",
+    "lib/capistrano-abril/site-reference.rb",
+    "lib/capistrano-abril/site-structure.rb",
     "lib/capistrano-abril/specs.rb",
+    "lib/capistrano-abril/symlinks.rb",
     "lib/capistrano-abril/version.rb",
     "test/test_helper.rb"
   ]
   s.homepage = %q{http://github.com/abril/capistrano-abril}
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.5.2}
+  s.rubygems_version = %q{1.6.2}
   s.summary = %q{Defaults and recipes used in our deployments.}
   s.test_files = [
     "test/test_helper.rb"
