@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{capistrano-abril}
-  s.version = "0.2.1"
+  s.version = "0.2.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Marcus Vinicius Ferreira"]
@@ -26,12 +26,9 @@ Gem::Specification.new do |s|
     "lib/capistrano-abril/bundler.rb",
     "lib/capistrano-abril/gems.rb",
     "lib/capistrano-abril/git.rb",
-    "lib/capistrano-abril/migrations.rb",
     "lib/capistrano-abril/multistage.rb",
     "lib/capistrano-abril/passenger.rb",
     "lib/capistrano-abril/php.rb",
-    "lib/capistrano-abril/privates.rb",
-    "lib/capistrano-abril/shared.rb",
     "lib/capistrano-abril/specs.rb",
     "lib/capistrano-abril/version.rb",
     "test/test_helper.rb"

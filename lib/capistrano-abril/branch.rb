@@ -8,10 +8,8 @@ CapistranoAbril.with_configuration do
     task :set_branch do
 
       if !exists?(:branch)
-
-        set :branch, ENV['TAG'] || ENV['BRANCH'] \
-          || Capistrano::CLI.ui.ask('Type TAG or BRANCH or SHA1 commit. (default: master)') || 'master'
-
+        set :branch, ENV['TAG'] || ENV['BRANCH'] || Capistrano::CLI.ui.ask('Type TAG or BRANCH or SHA1 commit. (default: master)')
+        set :branch, "master" if branch.empty?
       end
 
     end # task
@@ -19,6 +17,4 @@ CapistranoAbril.with_configuration do
     before  "deploy:update" , "deploy:set_branch"
 
   end # namespace
-
 end
-

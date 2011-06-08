@@ -1,5 +1,13 @@
 # capistrano-abril Changelog
 
+## 0.2.2
+
+* fix quando não há retorno algum na branch
+
+## 0.2.1
+
+* fix no retorno do valor inputado na hora da branch
+
 ## 0.2.0
 
 New:
