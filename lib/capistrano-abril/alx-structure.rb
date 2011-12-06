@@ -20,13 +20,14 @@ CapistranoAbril.with_configuration do
       # structure clone
       # symlink inside site-reference
       run <<-CMD
-        if [ ! -d #{structure_path}/.git ] ;
-        then echo "Cloning structure:"   &&
-             git clone --depth 1 #{structure_repos} #{structure_path} &&
-             cd #{structure_path} && git checkout -b #{st_branch} -t origin/#{st_branch};
-        else echo "Resetting structure:" &&
-             cd #{structure_path} && git reset --hard && git clean -d -x -f;
-        fi ;
+        # DO NOT DO RESET HARD ANYMORE YOU BASTARD.. all the headlines go away!
+        #if [ ! -d #{structure_path}/.git ] ;
+        #then echo "Cloning structure:"   &&
+        #     git clone --depth 1 #{structure_repos} #{structure_path} &&
+        #     cd #{structure_path} && git checkout -b #{st_branch} -t origin/#{st_branch};
+        #else echo "Resetting structure:" &&
+        #     cd #{structure_path} && git reset --hard && git clean -d -x -f;
+        #fi ;
         ln -nsf #{structure_path} #{latest_release}/structure
       CMD
 
@@ -36,5 +37,4 @@ CapistranoAbril.with_configuration do
   end # namespace
 
 end
-
 
