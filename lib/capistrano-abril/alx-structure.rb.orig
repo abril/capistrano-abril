@@ -15,17 +15,32 @@ CapistranoAbril.with_configuration do
       end
 
       # Custom branch/tag ?
+<<<<<<< HEAD
+      set :st_branch, ENV['TAG'] || ENV['BRANCH'] || structure_branch || 'master'
+=======
       set :st_branch, ENV['STRUCTURE'] || :structure_branch || 'master'
+>>>>>>> Updates.
 
       # structure clone
       # symlink inside site-reference
       run <<-CMD
+<<<<<<< HEAD
+        # DO NOT DO RESET HARD ANYMORE YOU BASTARD.. all the headlines go away!
+        #if [ ! -d #{structure_path}/.git ] ;
+        #then echo "Cloning structure:"   &&
+        #     git clone --depth 1 #{structure_repos} #{structure_path} &&
+        #     cd #{structure_path} && git checkout -b #{st_branch} -t origin/#{st_branch};
+        #else echo "Resetting structure:" &&
+        #     cd #{structure_path} && git reset --hard && git clean -d -x -f;
+        #fi ;
+=======
         if [ -d #{structure_path}/.git ] ;
         then echo "Structure: git found..."
         else echo "Cloning structure:" &&
              git clone --depth 1 #{structure_repos} #{structure_path} &&
              cd #{structure_path} && git checkout -b #{st_branch} ;
         fi ;
+>>>>>>> Updates.
         ln -nsf #{structure_path} #{latest_release}/structure
       CMD
 

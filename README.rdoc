@@ -36,8 +36,6 @@ Here's an example config/deploy.rb that uses a few helpers:
   require 'capistrano-abril/branch'        # Deploy by BRANCH/TAG/commit
   require 'capistrano-abril/bundler'       # 'bundle install' correctly
   require 'capistrano-abril/passenger'     # 'restart' for Apache passenger
-  require 'capistrano-abril/config_files'  # Symlink to config files
-  require 'capistrano-abril/symlinks'      # Symlink to any dir/file
 
 That's it! The recipe will now also perform the actions described by the
 helpers: ask for a branch, call bundle install, use multistage and so on.
@@ -256,7 +254,19 @@ branch/tag that was deployed.
   set :repository       , "github.com/teste/mysite1"
   set :repository_cache , "git-#{application}"
 
-  #
+  set :symlinks, {
+        '/data/libc'       => "public/libc"  ,
+        '/data/tst/assets' => "public/assets",
+        '/data/tst/static' => "public/static",
+  }
+
+  ### Symlink from #{shared_path}/config to #{latest_release}/config
+  ###     file(s) => destination
+  set :config_files, {
+      '*.yml'          => "config/",
+      'production.rb'  => "config/environments/"
+  }
+
   # Tasks
   #
   require 'capistrano-abril/abril'         # Abril defaults
@@ -305,14 +315,35 @@ branch/tag that was deployed.
   require 'capistrano-abril/branch'        # Deploy by BRANCH/TAG/commit
   require 'capistrano-abril/bundler'       # 'bundle install' correctly
   require 'capistrano-abril/passenger'     # 'restart' for Apache passenger
-  require 'capistrano-abril/config_files'  # Symlink to config files
-  require 'capistrano-abril/symlinks'      # Symlink to any dir/file
 
   require 'capistrano-abril/alx-structure' # This is an Alexandria site
 
 
 === PHP
 
-TODO
+  ###
+  ### PHP site
+  ###
+
+  #
+  # Deploy Settings
+  #
+  set :user             , "teste3"
+  set :port             , 22
+  set :application      , "teste3"
+  set :repository       , "github.com/teste/teste3"
+  set :repository_cache , "git-#{application}"
+
+  #
+  # Tasks
+  #
+  require 'capistrano-abril/abril'         # Abril defaults
+  require 'capistrano-abril/git'           # Git defaults
+  require 'capistrano-abril/setup'         # 'deploy:setup' as supposed to be.
+  require 'capistrano-abril/version'       # Deploy version
+  require 'capistrano-abril/multistage'    # Support to multistage scenarios
+  require 'capistrano-abril/branch'        # Deploy by BRANCH/TAG/commit
+  require 'capistrano-abril/symlinks'      # Symlink to any dir/file
+
 
 

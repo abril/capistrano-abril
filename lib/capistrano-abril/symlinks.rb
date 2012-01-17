@@ -11,6 +11,10 @@ CapistranoAbril.with_configuration do
         abort 'You must specify "set :symlinks" command. See README.'
       end
 
+      # Pre-req: abril.rb
+      deploy.setup_vars
+
+      # Create links
       symlinks.each do |path,destination|
 
         raise "Release path is nil!"     if release_path.nil? || release_path.empty?

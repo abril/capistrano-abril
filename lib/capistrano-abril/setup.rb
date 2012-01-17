@@ -29,6 +29,10 @@ CapistranoAbril.with_configuration do
             run "#{sudo} chown #{user}:#{ugroup} #{d}", :pty => true
         end
         run "ln -nfs #{releases_path}/1 #{deploy_to}/current"
+
+        ### Cleaning up old 'Time.utc' releases
+        run "[ -d #{releases_path}/20???????????? ] && /bin/rm -rf #{releases_path}/20????????????"
+
         puts "  * Dirs created."
     end
     before "deploy:setup" , "deploy:setup_vars"
