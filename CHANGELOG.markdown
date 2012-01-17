@@ -1,5 +1,12 @@
 # capistrano-abril Changelog
 
+## 0.2.1
+
+Bug:
+
+* symlinks: calling setup_vars to ensure path's.
+* setup: cleaning up releases based on old time mask.
+
 ## 0.2.0
 
 New:

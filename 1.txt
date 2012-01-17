@@ -1,0 +1,29 @@
+
+=== PHP
+
+  ###
+  ### PHP site
+  ###
+
+  #
+  # Deploy Settings
+  #
+  set :user             , "teste3"
+  set :port             , 22
+  set :application      , "teste3"
+  set :repository       , "github.com/teste/teste3"
+  set :repository_cache , "git-#{application}"
+
+  #
+  # Tasks
+  #
+  require 'capistrano-abril/abril'         # Abril defaults
+  require 'capistrano-abril/git'           # Git defaults
+  require 'capistrano-abril/setup'         # 'deploy:setup' as supposed to be.
+  require 'capistrano-abril/version'       # Deploy version
+  require 'capistrano-abril/multistage'    # Support to multistage scenarios
+  require 'capistrano-abril/branch'        # Deploy by BRANCH/TAG/commit
+  require 'capistrano-abril/config_files'  # Symlink to config files
+  require 'capistrano-abril/symlinks'      # Symlink to any dir/file
+
+

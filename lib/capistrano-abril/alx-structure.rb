@@ -4,7 +4,7 @@ CapistranoAbril.with_configuration do
 
   namespace :deploy do
 
-    desc '(alx-structure.rb) Alexandria site-reference deploy.'
+    desc '(alx-structure.rb) Alexandria site-structure deploy.'
     task :structure do
 
       # checking....
@@ -15,23 +15,41 @@ CapistranoAbril.with_configuration do
       end
 
       # Custom branch/tag ?
-      set :st_branch, ENV['TAG'] || ENV['BRANCH'] || :structure_branch || 'master'
+      set :st_branch, ENV['STRUCTURE'] || :structure_branch || 'master'
 
       # structure clone
       # symlink inside site-reference
       run <<-CMD
-        if [ ! -d #{structure_path}/.git ] ;
-        then echo "Cloning structure:"   &&
+        if [ -d #{structure_path}/.git ] ;
+        then echo "Structure: git found..."
+        else echo "Cloning structure:" &&
              git clone --depth 1 #{structure_repos} #{structure_path} &&
-             cd #{structure_path} && git checkout -b #{st_branch}     ;
-        else echo "Resetting structure:" &&
-             cd #{structure_path} && git reset --hard && git clean -d -x -f;
+             cd #{structure_path} && git checkout -b #{st_branch} ;
         fi ;
         ln -nsf #{structure_path} #{latest_release}/structure
       CMD
 
     end
     after "deploy:symlink" , "deploy:structure"
+
+
+    desc '(alx-structure.rb) Alexandria structure RESET.'
+    task :structure_reset do
+
+      # Custom branch/tag ?
+      set :st_branch, ENV['STRUCTURE'] || :structure_branch || 'master'
+
+      # structure clone
+      # symlink inside site-reference
+      run <<-CMD
+        if [ -d #{structure_path}/.git ] ;
+        then echo "Resetting structure:" && cd #{structure_path} && git reset --hard && git clean -d -x -f;
+        else echo "Structure: git NOT FOUND";
+        fi ;
+      CMD
+
+    end
+
 
   end # namespace
 
