@@ -1,12 +1,17 @@
 # capistrano-abril Changelog
 
+## 0.2.5
+
+Bug:
+
+* Changed way to find current environment before run bundler task. Useful for non-rails applications.
+
 ## 0.2.1
 
 Bug:
 
 * symlinks: calling setup_vars to ensure path's.
 * setup: cleaning up releases based on old time mask.
-* Changed way to find current environment before run bundler task. Useful for non-rails applications.
 
 ## 0.2.0
 
