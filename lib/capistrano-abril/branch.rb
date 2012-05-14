@@ -17,6 +17,7 @@ CapistranoAbril.with_configuration do
     end # task
     # on :start, :set_branch
     before  "deploy:update" , "deploy:set_branch"
+    before  "deploy:migrate", "deploy:set_branch"
 
   end # namespace
 
