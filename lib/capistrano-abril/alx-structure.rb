@@ -50,7 +50,14 @@ CapistranoAbril.with_configuration do
 
     end
 
-
+    desc '(alx-structure.rb) Update structure dir'
+    task :update_structure do
+      run <<-CMD
+        cd #{structure_path} &&
+        git fetch &&
+        git checkout -f `git rev-parse origin/#{structure_branch}`
+      CMD
+    end
   end # namespace
 
 end
