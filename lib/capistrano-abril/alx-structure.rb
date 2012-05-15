@@ -24,7 +24,7 @@ CapistranoAbril.with_configuration do
         then echo "Structure: git found...";
         else echo "Cloning structure:" &&
              git clone --depth 1 #{structure_repos} #{structure_path} &&
-             cd #{structure_path} && git checkout -b #{st_branch} ;
+             cd #{structure_path} && git checkout -t origin/#{st_branch} ;
         fi ;
         ln -nsf #{structure_path} #{latest_release}/structure
       CMD
