@@ -3,6 +3,6 @@ require File.dirname(__FILE__) + '/check'
 
 CapistranoAbril.with_configuration do
 
-  before "deploy:symlink", "check:rails2"
+  after "deploy:structure", "check:rails3"
 
 end
