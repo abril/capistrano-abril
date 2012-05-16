@@ -25,13 +25,15 @@ pkg
 *sw?
 *~
 
-*.tar
-*.[t]gz
-*.[t]bz
-*.[t]bz2
-*.zip
-*.arj
-*.a[0-9][0-9]
+*tar
+*gz
+*bz
+*bz2
+*zip
+*arj
+*a[0-9][0-9]
+*gem
+*rpm
 
 afiedt.buf
 sqlnet.log
