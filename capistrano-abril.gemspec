@@ -4,18 +4,18 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{capistrano-abril}
-  s.version = "0.2.3"
-
+  s.name = "capistrano-abril"
+  s.version = "0.2.6"
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Marcus Vinicius Ferreira"]
-  s.date = %q{2011-06-08}
-  s.description = %q{Defaults and recipes used in our deployments. Based on 'capistrano-helpers' gem.}
-  s.email = %q{ferreira.mv@gmail.com}
+  s.date = "2012-05-15"
+  s.description = "Defaults and recipes used in our deployments. Based on 'capistrano-helpers' gem."
+  s.authors  = `git log --raw | grep Author: | awk -F ': | <|>' '{ print $2 }' | sort | uniq`.split("\n")
+  s.email    = `git log --raw | grep Author: | awk -F ': | <|>' '{ print $3 }' | sort | uniq`.split("\n")
   s.extra_rdoc_files = [
     "README.rdoc"
   ]
   s.files = [
+    "1.txt",
     "CHANGELOG.markdown",
     "README.rdoc",
     "Rakefile",
@@ -27,6 +27,8 @@ Gem::Specification.new do |s|
     "lib/capistrano-abril/b.rb",
     "lib/capistrano-abril/branch.rb",
     "lib/capistrano-abril/bundler.rb",
+    "lib/capistrano-abril/check.rb",
+    "lib/capistrano-abril/check_alx_site.rb",
     "lib/capistrano-abril/check_rails2.rb",
     "lib/capistrano-abril/check_rails3.rb",
     "lib/capistrano-abril/config_files.rb",
@@ -45,9 +47,10 @@ Gem::Specification.new do |s|
     "lib/capistrano-abril/version.rb",
     "test/test_helper.rb"
   ]
-  s.homepage = %q{http://github.com/abril/capistrano-abril}
+  s.test_files = ["test/test_helper.rb"]
+  s.homepage = "http://github.com/abril/capistrano-abril"
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.6.2}
+  s.rubygems_version = %q{1.8.10}
   s.summary = %q{Defaults and recipes used in our deployments.}
   s.test_files = [
     "test/test_helper.rb"
@@ -65,4 +68,3 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<capistrano>, ["~> 2.5.19"])
   end
 end
-

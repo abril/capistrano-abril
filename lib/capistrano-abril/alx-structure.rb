@@ -21,10 +21,10 @@ CapistranoAbril.with_configuration do
       # symlink inside site-reference
       run <<-CMD
         if [ -d #{structure_path}/.git ] ;
-        then echo "Structure: git found..."
+        then echo "Structure: git found...";
         else echo "Cloning structure:" &&
              git clone --depth 1 #{structure_repos} #{structure_path} &&
-             cd #{structure_path} && git checkout -b #{st_branch} ;
+             cd #{structure_path} && git checkout -t origin/#{st_branch} ;
         fi ;
         ln -nsf #{structure_path} #{latest_release}/structure
       CMD
@@ -50,6 +50,14 @@ CapistranoAbril.with_configuration do
 
     end
 
+    desc '(alx-structure.rb) Update structure dir'
+    task :update_structure do
+      run <<-CMD
+        cd #{structure_path} &&
+        git fetch &&
+        git checkout -f `git rev-parse origin/#{structure_branch}`
+      CMD
+    end
 
   end # namespace
 

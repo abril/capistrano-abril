@@ -1,5 +1,16 @@
 # capistrano-abril Changelog
 
+## 0.2.6
+
+* setting vars when run task 'deploy:migrate'.
+* fix alexandria sites deploy, to create structure dir correctly.
+* new task to update structure code on deploy. Useful for dev and qa environments.
+
+## 0.2.5
+
+Bug:
+
+* Changed way to find current environment before run bundler task. Useful for non-rails applications.
 ## 0.2.2
 
 * fix quando não há retorno algum na branch

@@ -46,6 +46,7 @@ CapistranoAbril.with_configuration do
 
     end
     before  "deploy:update" , "deploy:setup_vars"
+    before  "deploy:migrate", "deploy:setup_vars"
 
     ### show_vars
     desc "(abril.rb) show_vars: Show custom variables defined by abril.rb."
